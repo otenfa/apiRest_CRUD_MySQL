@@ -2,12 +2,62 @@ package com.sumauma.springComMySQL.services;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.sumauma.springComMySQL.dto.UserDTO;
+import com.sumauma.springComMySQL.dto.UserMinDTO;
 import com.sumauma.springComMySQL.entities.User;
+import com.sumauma.springComMySQL.repositories.UserRepository;
 
-public interface UserService {
+@Service
+public class UserService {
 
-	public List<User> getUser();
-	public void saveUser(User user);
-	public User findById(Integer id);
-	public void deleteUser(User user);
+	@Autowired
+	private UserRepository userRepository;
+	
+	/*
+	public List<User> getUser() {
+		return userRepository.findAll();
+	}
+
+	
+	public void saveUser(User user) {
+		userRepository.save(user);
+	}
+	*/
+	
+	@Transactional(readOnly = true)
+	public UserDTO findById(Integer id) {
+		User user = userRepository.findById(id).get();
+		return new UserDTO(user);
+		
+	}
+	
+	@Transactional(readOnly = true)
+	public List<UserDTO> findAll() {
+		List<User> userList = userRepository.findAll();
+		return userList.stream().map(x -> new UserDTO(x)).toList();
+		
+	}
+
+	@Transactional(readOnly = true)
+	public List<UserMinDTO> findAllMin() {
+		List<User> userList = userRepository.findAll();
+		return userList.stream().map(x -> new UserMinDTO(x.getId(), 
+				x.getCity(),
+				x.getUserName(), 
+				x.getMobileNo(), 
+				x.getEmailId())).toList();
+		
+	}
+
+	
+	/*
+	public void deleteUser(User user) {
+		userRepository.delete(user);
+		
+	}
+	*/
 }
