@@ -24,19 +24,9 @@ public class UserController {
 	private UserService userService;
 	
 	@GetMapping("/user/{id}")
-	public ResponseEntity<?> findById(@PathVariable Integer id) {
-		Map<String, Object> map = new LinkedHashMap<String, Object>();
-		try {
-			UserDTO userDto = userService.findById(id);
-			map.put("status", 1);
-			map.put("data", userDto);
-			return new ResponseEntity<>(map, HttpStatus.OK);
-		} catch (Exception ex) {
-			map.clear();
-			map.put("status", 0);
-			map.put("message", "Data is not found");
-			return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
-		}
+	public ResponseEntity<UserDTO> findById(@PathVariable Integer id) {
+		UserDTO dto = userService.findById(id);
+		return ResponseEntity.ok(dto);
 	}
 	
 	@GetMapping("/users")

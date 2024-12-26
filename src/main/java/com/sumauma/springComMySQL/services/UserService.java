@@ -10,6 +10,7 @@ import com.sumauma.springComMySQL.dto.UserDTO;
 import com.sumauma.springComMySQL.dto.UserMinDTO;
 import com.sumauma.springComMySQL.entities.User;
 import com.sumauma.springComMySQL.repositories.UserRepository;
+import com.sumauma.springComMySQL.services.handlerExceptions.RessourceNotFoundException;
 
 @Service
 public class UserService {
@@ -30,7 +31,8 @@ public class UserService {
 	
 	@Transactional(readOnly = true)
 	public UserDTO findById(Integer id) {
-		User user = userRepository.findById(id).get();
+		User user = userRepository.findById(id).orElseThrow(
+				() -> new RessourceNotFoundException("recurso não entrado"));
 		return new UserDTO(user);
 		
 	}
